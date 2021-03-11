@@ -1,0 +1,5 @@
+build
+libtorch
+
+**/.DS_Store
+**/.vscode
