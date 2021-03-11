@@ -25,7 +25,6 @@ void Module::load_weight(std::ifstream& fin) {
 // does not implement inner ops
 at::Tensor Module::forward(at::Tensor input) {
     auto output = input;
-    std::cout << "in_module_forward\n";
     if (this->children.size())
         for (auto& child : this->children)
             output = child->forward(output);
@@ -58,6 +57,17 @@ at::Tensor Conv2d::forward(at::Tensor input) {
         bias = this->weights[1];
     return torch::conv2d(input, this->weights[0], bias, this->stride,
         this->padding, this->dilation, this->groups);
+}
+
+BatchNorm::BatchNorm(double eps, double momentum) {
+    this->eps = eps;
+    this->momentum = momentum;
+    this->n_weights = 4;
+}
+
+at::Tensor BatchNorm::forward(at::Tensor input) {
+    return torch::batch_norm(input, this->weights[0], this->weights[1], this->weights[2], this->weights[3],
+        false, this->momentum, this->eps, false);
 }
 
 };

@@ -32,13 +32,21 @@ public:
 
 class Conv2d : public Module {
 public:
-    Conv2d(bool bias = false, int stride = 1, int padding = 1, int dilation = 1, int groups = 1);
+    Conv2d(bool bias = false, int stride = 1, int padding = 0, int dilation = 1, int groups = 1);
     at::Tensor forward(at::Tensor input) override;
     bool bias;
     int stride;
     int padding;
     int dilation;
     int groups;
+};
+
+class BatchNorm : public Module {
+public:
+    BatchNorm(double eps = 1e-5, double momentum = 0.1);
+    at::Tensor forward(at::Tensor input) override;
+    double eps;
+    double momentum;
 };
 
 };
