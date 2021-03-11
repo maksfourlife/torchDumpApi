@@ -7,6 +7,6 @@
 int main() {
     std::ifstream fin;
     fin.open("/Users/maxkrutonog/Desktop/tensor", std::ios::binary | std::ios::in);
-    std::cout << get_content(fin) << std::endl;
+    std::cout << dumpapi::load_tensor(fin) << std::endl;
     fin.close();
 }

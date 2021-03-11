@@ -9,14 +9,6 @@ T from_stream(std::ifstream& fin, char* buf) {
     return n;
 }
 
-std::vector<int64_t> get_sizes(std::ifstream& fin) {
-    char buf[sizeof(int)];
-    std::vector<int64_t> size(from_stream<int>(fin, buf));
-    for (int i = 0; i < size.size(); i++)
-        size[i] = (int64_t)from_stream<int>(fin, buf);
-    return size;
-}
-
 template <typename T>
 T prod(std::vector<T> vec) {
     T p = vec[0];
@@ -25,8 +17,18 @@ T prod(std::vector<T> vec) {
     return p;
 }
 
-at::Tensor get_content(std::ifstream& fin) {
-    auto size = get_sizes(fin);
+namespace dumpapi {
+
+std::vector<int64_t> load_sizes(std::ifstream& fin) {
+    char buf[sizeof(int)];
+    std::vector<int64_t> size(from_stream<int>(fin, buf));
+    for (int i = 0; i < size.size(); i++)
+        size[i] = (int64_t)from_stream<int>(fin, buf);
+    return size;
+}
+
+at::Tensor load_tensor(std::ifstream& fin) {
+    auto size = load_sizes(fin);
     char buf[sizeof(float)];
     std::vector<float> content(prod<int64_t>(size));
     for (int64_t i = 0; i < content.size(); i++)
@@ -34,3 +36,5 @@ at::Tensor get_content(std::ifstream& fin) {
     auto shape = new c10::ArrayRef<int64_t>(size.data(), size.size());
     return torch::tensor(content).reshape(*(c10::IntArrayRef*)shape);
 }
+
+};

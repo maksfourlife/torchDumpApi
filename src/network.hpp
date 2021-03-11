@@ -12,25 +12,25 @@
 namespace dumpapi {
 namespace network {
 
-class Callable {
+class Module {
 public:
-    at::Tensor forward(at::Tensor input);
+    Module();
+    Module(std::vector<Module> children);
+    virtual at::Tensor forward(at::Tensor input);
     void load_weight(std::ifstream& fin);
-};
-
-class Sequential : Callable {
-public:
-    Sequential(std::vector<Module> children);
-private:
-    std::vector<Module> children;
-};
-
-class Module : Callable {
-private:
+protected:
     std::vector<at::Tensor> weights;
+    std::vector<Module> children;
+    int n_weights;
 };
 
-class Linear : Module {};
+class Linear : public Module {
+public:
+    Linear(bool bias = true);
+    virtual at::Tensor forward(at::Tensor input);
+private:
+    bool bias;
+};
 
 };
 };

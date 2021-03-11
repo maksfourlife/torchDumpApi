@@ -5,12 +5,10 @@
 // SPEC:
 // [lensize][size ...][data]
 
-template <typename T>
-T from_stream(std::ifstream& fin, char* buf);
+namespace dumpapi {
 
-std::vector<int64_t> get_sizes(std::ifstream& fin);
+std::vector<int64_t> load_sizes(std::ifstream& fin);
 
-template <typename T>
-T prod(std::vector<T> vec);
+at::Tensor load_tensor(std::ifstream& fin);
 
-at::Tensor get_content(std::ifstream& fin);
+};
