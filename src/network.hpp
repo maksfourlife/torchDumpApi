@@ -15,20 +15,18 @@ namespace network {
 class Module {
 public:
     Module();
-    Module(std::vector<Module> children);
+    Module(std::vector<Module*> children);
     virtual at::Tensor forward(at::Tensor input);
     void load_weight(std::ifstream& fin);
-protected:
     std::vector<at::Tensor> weights;
-    std::vector<Module> children;
+    std::vector<Module*> children;
     int n_weights;
 };
 
 class Linear : public Module {
 public:
     Linear(bool bias = true);
-    virtual at::Tensor forward(at::Tensor input);
-private:
+    at::Tensor forward(at::Tensor input) override;
     bool bias;
 };
 
