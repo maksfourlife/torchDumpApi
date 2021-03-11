@@ -6,12 +6,12 @@
 
 
 int main() {
-    std::ifstream fin("/Users/maxkrutonog/Desktop/layer", std::ios::binary | std::ios::in);
-    std::vector<dumpapi::network::Module*> children = {
-        new dumpapi::network::Linear(true)
-    };
-    dumpapi::network::Module network(children);
+    std::ifstream fin("/Users/maxkrutonog/Desktop/model", std::ios::binary | std::ios::in);
+    dumpapi::network::Module network({
+        new dumpapi::network::Linear(true),
+        new dumpapi::network::Linear(true),
+    });
     network.load_weight(fin);
-    std::cout << network.children[0]->forward(torch::zeros({1, 3})) << std::endl;
+    std::cout << network.forward(torch::zeros({1, 3})) << std::endl;
     fin.close();
 }

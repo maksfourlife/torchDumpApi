@@ -43,5 +43,22 @@ at::Tensor Linear::forward(at::Tensor input) {
     return torch::linear(input, this->weights[0]);
 }
 
+Conv2d::Conv2d(bool bias, int stride, int padding, int dilation, int groups) : Module() {
+    this->bias = bias;
+    this->n_weights = 1 + bias;
+    this->stride = stride;
+    this->padding = padding;
+    this->dilation = dilation;
+    this->groups = groups;
+}
+
+at::Tensor Conv2d::forward(at::Tensor input) {
+    c10::optional<at::Tensor> bias = {};
+    if (this->bias)
+        bias = this->weights[1];
+    return torch::conv2d(input, this->weights[0], bias, this->stride,
+        this->padding, this->dilation, this->groups);
+}
+
 };
 };

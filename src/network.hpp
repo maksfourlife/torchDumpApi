@@ -30,5 +30,16 @@ public:
     bool bias;
 };
 
+class Conv2d : public Module {
+public:
+    Conv2d(bool bias = false, int stride = 1, int padding = 1, int dilation = 1, int groups = 1);
+    at::Tensor forward(at::Tensor input) override;
+    bool bias;
+    int stride;
+    int padding;
+    int dilation;
+    int groups;
+};
+
 };
 };
