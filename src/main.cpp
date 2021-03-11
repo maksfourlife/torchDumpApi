@@ -8,12 +8,9 @@
 int main() {
     std::ifstream fin("/Users/maxkrutonog/Desktop/model", std::ios::binary | std::ios::in);
     dumpapi::network::Module network({
-        new dumpapi::network::BatchNorm()
+        new dumpapi::network::ConvBNActivation(2, 1),
     });
     network.load_weight(fin);
     fin.close();
-    fin.open("/Users/maxkrutonog/Desktop/tensor", std::ios::binary | std::ios::in);
-    auto tensor = dumpapi::load_tensor(fin);
-    fin.close();
-    std::cout << network.forward(tensor) << std::endl;
+    std::cout << network.forward(torch::zeros({1, 3, 5, 5})).index({0, 1}) << std::endl;
 }

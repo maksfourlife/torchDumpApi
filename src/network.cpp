@@ -59,7 +59,7 @@ at::Tensor Conv2d::forward(at::Tensor input) {
         this->padding, this->dilation, this->groups);
 }
 
-BatchNorm::BatchNorm(double eps, double momentum) {
+BatchNorm::BatchNorm(double eps, double momentum) : Module() {
     this->eps = eps;
     this->momentum = momentum;
     this->n_weights = 4;
@@ -69,6 +69,16 @@ at::Tensor BatchNorm::forward(at::Tensor input) {
     return torch::batch_norm(input, this->weights[0], this->weights[1], this->weights[2], this->weights[3],
         false, this->momentum, this->eps, false);
 }
+
+at::Tensor ReLU6::forward(at::Tensor input) {
+    return torch::clamp(input, 0, 6);
+}
+
+ConvBNActivation::ConvBNActivation(int stride, int padding, int groups) : Module({
+    new Conv2d(false, stride, padding, 1, groups),
+    new BatchNorm(),
+    new ReLU6(),
+}) {}
 
 };
 };

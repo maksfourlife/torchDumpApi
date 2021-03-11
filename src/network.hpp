@@ -49,5 +49,16 @@ public:
     double momentum;
 };
 
+class ReLU6 : public Module {
+public:
+    ReLU6() : Module() { }
+    at::Tensor forward(at::Tensor input) override;
+};
+
+class ConvBNActivation : public Module {
+public:
+    ConvBNActivation(int stride = 1, int padding = 0, int groups = 1);
+};
+
 };
 };
