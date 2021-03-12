@@ -60,5 +60,13 @@ public:
     ConvBNActivation(int stride = 1, int padding = 0, int groups = 1);
 };
 
+class InvertedResidual : public Module {
+public:
+    InvertedResidual(bool sum, int stride = 1, int padding = 0, int groups = 1);
+    InvertedResidual(bool sum, int stride1, int padding1, int groups1, int stride2, int padding2, int groups2);
+    at::Tensor forward(at::Tensor input) override;
+    bool sum;
+};
+
 };
 };

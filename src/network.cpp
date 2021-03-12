@@ -80,5 +80,29 @@ ConvBNActivation::ConvBNActivation(int stride, int padding, int groups) : Module
     new ReLU6(),
 }) {}
 
+InvertedResidual::InvertedResidual(bool sum, int stride, int padding, int groups) : Module({
+    new ConvBNActivation(stride, padding, groups),
+    new Conv2d(),
+    new BatchNorm(),
+}) {
+    this->sum = sum;
+}
+
+InvertedResidual::InvertedResidual(bool sum, int stride1, int padding1, int groups1, int stride2, int padding2, int groups2) : Module({
+    new ConvBNActivation(stride1, padding1, groups1),
+    new ConvBNActivation(stride2, padding2, groups2),
+    new Conv2d(),
+    new BatchNorm(),
+}) {
+    this->sum = sum;
+}
+
+at::Tensor InvertedResidual::forward(at::Tensor input) {
+    auto output = Module::forward(input);
+    if (this->sum)
+        output += input;
+    return output;
+}
+
 };
 };
